@@ -1,0 +1,69 @@
+.sidebar {
+    width: 200px;
+    background: #f4f4f4;
+    padding: 10px;
+    position: fixed;
+    height: 100%;
+    overflow-y: auto;
+    left: -220px; /* 預設隱藏 */
+    transition: left 0.3s ease;
+}
+
+.sidebar.open {
+    left: 0; /* 當 isOpen 為 true 時顯示 */
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    position: relative;
+}
+
+.menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.sidebar ul li .dropdown-icon {
+    cursor: pointer;
+    font-size: 16px;
+    padding-left: 10px;
+}
+
+/* 子選單 */
+.dropdown-menu {
+    list-style-type: none;
+    padding-left: 20px;
+    display: none;
+    transition: max-height 0.3s ease-out;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.dropdown-menu.active {
+    display: block;
+    max-height: 500px;
+}
+
+.dropdown-menu li {
+    padding: 5px 0;
+}
+
+.dropdown-menu a {
+    text-decoration: none;
+    color: black;
+    display: block;
+    padding: 5px;
+}
+
+.dropdown-menu a:hover {
+    text-decoration: underline;
+}

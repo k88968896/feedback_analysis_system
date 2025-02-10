@@ -1,0 +1,8 @@
+.container {
+    display: flex;
+}
+
+main {
+    margin-left: 200px; /* 預留 Sidebar 的空間 */
+    padding: 20px;
+}
