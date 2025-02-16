@@ -36,6 +36,7 @@ const Sidebar = ({ isOpen }) => {
                         <span className="dropdown-icon">{dropdowns.department ? "▲" : "▼"}</span>
                     </div>
                     <ul className={`dropdown-menu ${dropdowns.department ? "active" : ""}`}>
+                        <li><Link to="/companies">公司列表</Link></li>
                         <li><Link to="/department-info">部門資料</Link></li>
                         <li><Link to="/employee-manage">員工管理</Link></li>
                     </ul>

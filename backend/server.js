@@ -3,8 +3,9 @@ const express = require("express");
 const cors = require("cors");
 const { connectDB, checkDBConnection } = require("./config/db");
 const authRoutes = require("./routes/auth");
+const companyRoutes = require("./routes/company");
+const departmentRoutes = require("./routes/department");
 const employeeRoutes = require("./routes/employee");
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -22,6 +23,8 @@ app.get("/api/test-db", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/companies", companyRoutes);
+app.use("/api/departments", departmentRoutes);
 app.use("/api/employees", employeeRoutes);
 
 app.get("/", (req, res) => {
