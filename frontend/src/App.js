@@ -1,25 +1,21 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
-import EmployeeManage from "./pages/EmployeeManage";
+import CompanyList from "./pages/CompanyList";
+import DepartmentList from "./pages/DepartmentList";
+import EmployeeList from "./pages/EmployeeList";
 
 function App() {
-    const [message, setMessage] = useState("");
-
-    useEffect(() => {
-        axios.get("http://localhost:5000")
-            .then(response => setMessage(response.data))
-            .catch(error => console.error("Error fetching data:", error));
-    }, []);
 
     return (
         <AuthProvider>
             <Router>
                 <Routes>
                     <Route path="/login" element={<Login />} />
-                    <Route path="/employee-manage" element={<EmployeeManage />} />
+                    <Route path="/companies" element={<CompanyList />} />
+                    <Route path="/departments/:companyId" element={<DepartmentList />} />
+                    <Route path="/employees/:departmentId" element={<EmployeeList />} />
                 </Routes>
             </Router>
         </AuthProvider>
