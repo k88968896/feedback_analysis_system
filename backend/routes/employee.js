@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
         }
 
         // 檢查 `department_id` 是否存在於 `companies` 集合
-        const company = await Company.findOne({ "departments.department_id": department_id });
+        const company = await Company.findOne({ "departments._id": department_id });
         if (!company) {
             return res.status(404).json({ message: "找不到部門，請確認 department_id 是否正確" });
         }
@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
             user_name,
             user_phone,
             user_identity_group: "employee",
-            department_id: new mongoose.Types.ObjectId(department_id),
+            department_id: department_id,
             password: hashedPassword
         });
 
@@ -45,11 +45,10 @@ router.post("/", async (req, res) => {
 
         // 更新 `companies` 集合，將員工加入對應的 `department`
         const companyUpdate = await Company.updateOne(
-            { "departments.department_id": department_id },
+            { "departments._id": department_id },
             {
                 $push: {
                     "departments.$.employees": {
-                        employee_id: savedUser._id,
                         user_id: savedUser._id,
                         position: "一般員工"
                     }
@@ -115,8 +114,8 @@ router.delete("/:employeeId", async (req, res) => {
 
         // 從 `companies` 集合內部門的 `employees` 陣列中移除
         await Company.updateOne(
-            { "departments.employees.employee_id": employeeId },
-            { $pull: { "departments.$.employees": { employee_id: employeeId } } }
+            { "departments.employees._id": employeeId },
+            { $pull: { "departments.$.employees": { _id: employeeId } } }
         );
 
         res.json({ message: "員工已刪除" });

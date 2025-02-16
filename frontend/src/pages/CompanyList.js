@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Layout from "../components/Layout";
 import Table from "../components/Table";
+import API from "../utils/api"; // 引入 api.js
+
 
 const CompanyList = () => {
     const [companies, setCompanies] = useState([]);
@@ -14,7 +16,7 @@ const CompanyList = () => {
 
     const fetchCompanies = async () => {
         try {
-            const res = await axios.get("http://localhost:5000/api/companies");
+            const res = await API.get("/companies");
             setCompanies(res.data);
         } catch (error) {
             console.error("Error fetching companies:", error);

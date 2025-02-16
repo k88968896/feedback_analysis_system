@@ -1,41 +1,37 @@
-import Layout from "../components/Layout";
-import { useState, useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/Login.css";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
-    const [companyCode, setCompanyCode] = useState("");
-    const [employeeCode, setEmployeeCode] = useState("");
-    const [password, setPassword] = useState("");
-    const { login } = useContext(AuthContext);
+    const { login } = useAuth();
     const navigate = useNavigate();
+    const [formData, setFormData] = useState({ user_account: "", password: "" });
+    const [error, setError] = useState("");
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await login(employeeCode, password);
-        navigate("/");
+        try {
+            await login(formData.user_account, formData.password);
+            navigate("/"); // 
+        } catch (err) {
+            setError("登入失敗，請檢查帳號與密碼");
+        }
     };
 
     return (
-        <Layout>
+        <div className="login-container">
             <h2>登入</h2>
+            {error && <p className="error">{error}</p>}
             <form onSubmit={handleSubmit}>
-                <p>
-                    <label>公司代碼</label>
-                    <input type="text" value={companyCode} onChange={(e) => setCompanyCode(e.target.value)} required />
-                </p>
-                <p>
-                    <label>員工代碼</label>
-                    <input type="text" value={employeeCode} onChange={(e) => setEmployeeCode(e.target.value)} required />
-                </p>
-                <p>
-                    <label>密碼</label>
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                </p>
+                <input type="text" name="user_account" placeholder="帳號" onChange={handleChange} required />
+                <input type="password" name="password" placeholder="密碼" onChange={handleChange} required />
                 <button type="submit">登入</button>
             </form>
-        </Layout>
+        </div>
     );
 };
 
