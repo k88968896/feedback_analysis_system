@@ -4,12 +4,12 @@ const CompanySchema = new mongoose.Schema({
     company_name: { type: String, required: true, unique: true },
     departments: [
         {
-            department_id: { type: mongoose.Schema.Types.ObjectId, ref: "Department" },
+            _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
             department_name: { type: String, required: true },
             HR: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // 部門 HR
             employees: [
                 {
-                    employee_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+                    _id: { type: mongoose.Schema.Types.ObjectId, auto:true },
                     user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
                     position: { type: String, required: true }
                 }
