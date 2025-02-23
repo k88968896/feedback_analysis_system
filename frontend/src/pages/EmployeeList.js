@@ -27,7 +27,7 @@ const EmployeeList = () => {
 
     const fetchEmployees = async () => {
         try {
-            const res = await API.get(`http://localhost:5000/api/departments/${departmentId}/employees`);
+            const res = await API.get(`/departments/${departmentId}/employees`);
             setEmployees(res.data.employees);
             setDepartmentName(res.data.department_name);
         } catch (error) {
@@ -38,7 +38,7 @@ const EmployeeList = () => {
     const handleAddEmployee = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:5000/api/employees", {
+            await API.post("/employees", {
                 ...newEmployee,
                 department_id: departmentId,
             });
@@ -58,7 +58,7 @@ const EmployeeList = () => {
         }
     
         try {
-            const res = await API.put(`http://localhost:5000/api/employees/${editEmployee._id}`, {
+            const res = await API.put(`/employees/${editEmployee._id}`, {
                 user_account: editEmployee.user_account,
                 user_name: editEmployee.user_name,
                 user_phone: editEmployee.user_phone,
@@ -78,7 +78,7 @@ const EmployeeList = () => {
         if (!confirmDelete) return;
 
         try {
-            await axios.delete(`http://localhost:5000/api/employees/${employeeId}`);
+            await API.delete(`/employees/${employeeId}`);
             fetchEmployees();
         } catch (error) {
             console.error("刪除員工失敗:", error);

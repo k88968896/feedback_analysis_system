@@ -55,7 +55,7 @@ const DepartmentList = () => {
         if (!confirmDelete) return;
 
         try {
-            await axios.delete(`http://localhost:5000/api/companies/${companyId}/departments/${departmentId}`);
+            await API.delete(`/companies/${companyId}/departments/${departmentId}`);
             fetchDepartments();
         } catch (error) {
             console.error("刪除部門失敗:", error);
