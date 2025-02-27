@@ -1,14 +1,13 @@
 const mongoose = require("mongoose");
 
 const ResponseSchema = new mongoose.Schema({
-    form_id: { type: mongoose.Schema.Types.ObjectId, ref: "Form" },
-    user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    form_id: { type: mongoose.Schema.Types.ObjectId, ref: "Form", required: true },
+    user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     submitted_at: { type: Date, default: Date.now },
     answers: [
         {
-            question_id: { type: mongoose.Schema.Types.ObjectId },
-            option_id: { type: mongoose.Schema.Types.ObjectId },
-            answer_content: { type: String }
+            question_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+            answer_content: { type: String, required: true }
         }
     ]
 });

@@ -7,6 +7,10 @@ const companyRoutes = require("./routes/company");
 const departmentRoutes = require("./routes/department");
 const employeeRoutes = require("./routes/employee");
 const userRoutes = require("./routes/user");
+//const formRoutes = require("./routes/form");
+//const responseRoutes = require("./routes/response");
+
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -33,6 +37,8 @@ app.use("/api/companies", companyRoutes);
 app.use("/api/departments", departmentRoutes);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/users", userRoutes);
+//app.use("/api/forms", formRoutes);
+//app.use("/api/responses", responseRoutes);
 
 app.get("/", (req, res) => {
     res.send("Express server is running...");

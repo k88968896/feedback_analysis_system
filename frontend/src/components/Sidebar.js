@@ -76,7 +76,7 @@ const Sidebar = ({ isOpen }) => {
                         <span className="dropdown-icon">{dropdowns.form ? "▲" : "▼"}</span>
                     </div>
                     <ul className={`dropdown-menu ${dropdowns.form ? "active" : ""}`}>
-                        <li><Link to="/management">測驗管理</Link></li>
+                        <li><Link to="/Forms">測驗管理</Link></li>
                         <li><Link to="/formlibrary">題目庫</Link></li>
                     </ul>
                 </li>
