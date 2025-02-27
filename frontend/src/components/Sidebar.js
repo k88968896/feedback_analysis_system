@@ -70,6 +70,16 @@ const Sidebar = ({ isOpen }) => {
                         <li><Link to="/users">使用者列表</Link></li>
                     </ul>
                 </li>
+                <li>
+                    <div className="menu-item" onClick={() => toggleDropdown("form")}>
+                        <span>學科測驗</span>
+                        <span className="dropdown-icon">{dropdowns.form ? "▲" : "▼"}</span>
+                    </div>
+                    <ul className={`dropdown-menu ${dropdowns.form ? "active" : ""}`}>
+                        <li><Link to="/management">測驗管理</Link></li>
+                        <li><Link to="/formlibrary">題目庫</Link></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     );
