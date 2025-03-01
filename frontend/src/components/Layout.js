@@ -1,13 +1,17 @@
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { Container, Row, Col } from "react-bootstrap";
 
 const Layout = ({ children }) => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const { user } = useAuth();
+    const [isSidebarOpen, setIsSidebarOpen] = useState(user ? true : false);
 
     const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
+        if (user) {
+            setIsSidebarOpen(!isSidebarOpen);
+        }
     };
 
     return (
@@ -16,21 +20,23 @@ const Layout = ({ children }) => {
             
             <Row className="flex-grow-1 g-0">
                 {/* 側邊欄區域 */}
-                <Col 
-                    md={3} 
-                    className={`bg-light border-end ${isSidebarOpen ? "d-block" : "d-none"}`}
-                    style={{ width: '250px' }}
-                >
-                    <Sidebar isOpen={isSidebarOpen} />
-                </Col>
+                {user && (
+                    <Col 
+                        md={3} 
+                        className={`bg-light border-end ${isSidebarOpen ? "d-block" : "d-none"}`}
+                        style={{ width: '250px' }}
+                    >
+                        <Sidebar isOpen={isSidebarOpen} />
+                    </Col>
+                )}
 
                 {/* 主要內容區域 */}
                 <Col 
                     className="p-4 overflow-auto" 
                     style={{
-                        marginLeft: isSidebarOpen,
+                        marginLeft: user && isSidebarOpen,
                         transition: 'margin-left 0.3s ease',
-                        width: `calc(100% - ${isSidebarOpen ? 250 : 0}px)`
+                        width: `calc(100% - ${user && isSidebarOpen ? 250 : 0}px)`
                     }}
                 >
                     {children}

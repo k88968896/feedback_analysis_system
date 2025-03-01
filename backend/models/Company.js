@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const CompanySchema = new mongoose.Schema({
     company_name: { type: String, required: true, unique: true },
+    company_code: { type: String, required: true, unique: true },
     departments: [
         {
             _id: { type: mongoose.Schema.Types.ObjectId, auto: true },

@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const Company = require("../models/Company");
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
@@ -41,7 +42,7 @@ router.post("/register", async (req, res) => {
 // 登入
 router.post("/login", async (req, res) => {
     try {
-        const { user_account, password } = req.body;
+        const { company_code, user_account, password } = req.body;
 
         // 檢查帳號是否存在
         const user = await User.findOne({ user_account });
@@ -49,10 +50,25 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ message: "帳號或密碼錯誤" });
         }
 
-        // 驗證密碼
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: "帳號或密碼錯誤" });
+        // 如果是 admin，則不檢查公司代號
+        if (user.role === "admin") {
+            // 驗證密碼
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                return res.status(400).json({ message: "帳號或密碼錯誤" });
+            }
+        } else {
+            // 檢查用戶所屬公司的代號
+            const company = await Company.findOne({ company_code });
+            if (!company) {
+                return res.status(400).json({ message: "公司代號錯誤" });
+            }
+
+            // 驗證密碼
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                return res.status(400).json({ message: "帳號或密碼錯誤" });
+            }
         }
 
         // 簽發 JWT

@@ -1,23 +1,32 @@
 import "../styles/Modal.css";
+import React from "react";
+import { Modal, Button, Form } from "react-bootstrap";
 
-const AddModal = ({ title, fields, onChange, onSubmit, onClose }) => {
+const AddModal = ({ title, fields, onSubmit, onClose }) => {
     return (
-        <div className="modal">
-            <div className="modal-content">
-                <span className="close" onClick={onClose}>&times;</span>
-                <h2>{title}</h2>
-                <form onSubmit={onSubmit}>
+        <Modal show onHide={onClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>{title}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form onSubmit={onSubmit}>
                     {fields.map((field, index) => (
-                        <div className="form-group" key={index}>
-                            <label>{field.label}:</label>
-                            <input type={field.type} name={field.name} value={field.value} onChange={onChange} required />
-                        </div>
+                        <Form.Group key={index} controlId={`form${index}`}>
+                            <Form.Label>{field.label}</Form.Label>
+                            <Form.Control
+                                type={field.type}
+                                value={field.value}
+                                onChange={field.onChange}
+                                required
+                            />
+                        </Form.Group>
                     ))}
-                    <button type="submit" className="save-btn">保存</button>
-                    <button type="button" className="cancel-btn" onClick={onClose}>取消</button>
-                </form>
-            </div>
-        </div>
+                    <Button variant="primary" type="submit">
+                        確定
+                    </Button>
+                </Form>
+            </Modal.Body>
+        </Modal>
     );
 };
 

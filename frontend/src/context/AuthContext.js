@@ -7,18 +7,26 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const fetchUser = async () => {
+        try {
+            const res = await API.get("/auth/me");
+            setUser(res.data); // 獲取用戶資訊
+        } catch {
+            logout();
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        API.get("/auth/me")
-            .then((res) => setUser(res.data))
-            .catch(() => logout());
-        setLoading(false);
+        fetchUser();
     }, []);
 
-    const login = async (user_account, password) => {
+    const login = async (company_code, user_account, password) => {
         try {
-            const res = await API.post("/auth/login", { user_account, password });
+            const res = await API.post("/auth/login", { company_code, user_account, password }); // 傳遞公司代號
             localStorage.setItem("token", res.data.token);
-            setUser(res.data);
+            await fetchUser(); // 登入後獲取用戶資訊
         } catch (error) {
             console.error("登入失敗:", error.response?.data?.message);
             throw error;

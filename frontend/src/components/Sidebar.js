@@ -33,7 +33,6 @@ const Sidebar = ({ isOpen }) => {
                             </CustomToggle>
                             <Accordion.Body className="p-0">
                                 <Nav className="flex-column">
-                                    <Nav.Link as={Link} to="/login" className="ps-4">登入(登出)</Nav.Link>
                                     <Nav.Link href="#" className="ps-4">公告欄</Nav.Link>
                                 </Nav>
                             </Accordion.Body>

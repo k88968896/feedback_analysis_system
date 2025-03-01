@@ -21,12 +21,29 @@ router.post("/", async (req, res) => {
     try {
         const { company_name } = req.body;
 
+        // 生成公司代號
+        const generateCompanyCode = () => {
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const numbers = '0123456789';
+            let code = '';
+            for (let i = 0; i < 3; i++) {
+                code += letters.charAt(Math.floor(Math.random() * letters.length));
+            }
+            code += '';
+            for (let i = 0; i < 3; i++) {
+                code += numbers.charAt(Math.floor(Math.random() * numbers.length));
+            }
+            return code;
+        };
+
+        const company_code = generateCompanyCode(); // 生成代號
+
         const existingCompany = await Company.findOne({ company_name });
         if (existingCompany) {
             return res.status(400).json({ message: "公司已存在" });
         }
 
-        const newCompany = new Company({ company_name, departments: [] });
+        const newCompany = new Company({ company_name, company_code, departments: [] }); // 存入代號
         await newCompany.save();
 
         res.status(201).json({ message: "公司新增成功", company: newCompany });
