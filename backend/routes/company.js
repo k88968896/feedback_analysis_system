@@ -17,7 +17,7 @@ router.get("/", verifyToken, async (req, res) => {
 
 // 新增公司 尚未新增權限
 //router.post("/", verifyToken, authorize(["admin"]), async (req, res) => {
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
     try {
         const { company_name } = req.body;
 

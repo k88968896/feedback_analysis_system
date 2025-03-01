@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import API from "../utils/api"; // 引入 api.js
 import Layout from "../components/Layout";
 import Table from "../components/Table";
@@ -14,7 +13,8 @@ const UserList = () => {
     const fetchUsers = async () => {
         try {
             const res = await API.get("/users");
-            setUsers(res.data);
+            console.log("API Response:", res.data); // Debugging
+            setUsers(res.data.usersWithCompanyInfo); // 確保這裡設置為正確的數組
         } catch (error) {
             console.error("Error fetching users:", error);
         }

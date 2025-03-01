@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import API from "../utils/api"; // 引入 api.js
 
 const AuthContext = createContext();
@@ -10,8 +10,9 @@ export const AuthProvider = ({ children }) => {
     const fetchUser = async () => {
         try {
             const res = await API.get("/auth/me");
-            setUser(res.data); // 獲取用戶資訊
-        } catch {
+            setUser(res.data); // 確保這裡設置為完整的用戶信息
+        } catch (error) {
+            console.error("Error fetching user:", error);
             logout();
         } finally {
             setLoading(false);
@@ -45,4 +46,6 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+    return useContext(AuthContext);
+};

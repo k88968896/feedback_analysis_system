@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Company = require("../models/Company");
+const { verifyToken, authorize } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
@@ -184,7 +185,7 @@ router.post("/login", async (req, res) => {
 });
 
 // 驗證登入並獲取當前用戶資訊
-router.get("/me", async (req, res) => {
+router.get("/me", verifyToken, async (req, res) => {
     try {
         const token = req.headers.authorization?.split(" ")[1];
         if (!token) {
@@ -192,14 +193,33 @@ router.get("/me", async (req, res) => {
         }
 
         const decoded = jwt.verify(token, JWT_SECRET);
-        const user = await User.findById(decoded.id).select("-password");
+        const userId = decoded.id; // 從 JWT 中提取用戶ID
+
+        // 使用 populate 獲取公司和部門信息
+        const user = await User.findById(userId)
+            .populate('company_id', 'company_name') // 獲取公司名稱
+            .populate('department_id', 'departments.department_name') // 獲取部門名稱
+            .select("-password"); // 不返回密碼
+
         if (!user) {
             return res.status(404).json({ message: "用戶不存在" });
         }
 
-        res.json(user);
+        // 構建返回的用戶資料
+        const userInfo = {
+            _id: user._id,
+            user_account: user.user_account,
+            user_name: user.user_name,
+            user_phone: user.user_phone,
+            role: user.role,
+            company_name: user.company_id ? user.company_id.company_name : "未指定", // 獲取公司名稱
+            department_name: user.department_id ? user.department_id.department_name : "未指定" // 獲取部門名稱
+        };
+
+        res.json(userInfo); // 返回完整的用戶信息
     } catch (error) {
-        res.status(401).json({ message: "無效的 Token" });
+        console.error("獲取用戶信息失敗:", error);
+        res.status(500).json({ message: "Server error" });
     }
 });
 

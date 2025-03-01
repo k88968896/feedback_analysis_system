@@ -7,6 +7,27 @@ const Header = ({ toggleSidebar }) => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
 
+    // 構建顯示的用戶名稱
+    const getUserDisplayName = () => {
+        if (!user) return "";
+
+        let displayName = user.user_name; // 使用者名稱
+        const companyName = user.company_name || "未指定"; // 公司名稱
+        const departmentName = user.department_name || ""; // 部門名稱
+
+        if (user.role === "company_admin") {
+            displayName += ` (${companyName} - 公司負責人)`;
+        } else if (user.role === "department_hr") {
+            displayName += ` (${companyName} - 部門負責人)`;
+        } else if (departmentName) {
+            displayName += ` (${companyName} - ${departmentName})`;
+        } else {
+            displayName += ` (${companyName})`;
+        }
+
+        return displayName;
+    };
+
     return (
         <Navbar bg="dark" variant="dark" expand="md" className="px-3">
             <Container fluid>
@@ -29,7 +50,7 @@ const Header = ({ toggleSidebar }) => {
                                     onClick={() => navigate("/")}
                                     style={{ cursor: 'pointer' }}
                                 >
-                                    {user.user_name}
+                                    {getUserDisplayName()}
                                 </span>
                                 <button 
                                     className="btn btn-link text-light ms-2" 
