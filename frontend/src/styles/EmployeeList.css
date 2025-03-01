@@ -27,15 +27,17 @@
 }
 
 .modal-content {
+    width: 90%;
+    max-width: 1200px;
+    max-height: 80vh;
+    overflow-x: auto;
     background: white;
-    padding: 20px;
     border-radius: 10px;
-    width: 400px;
-    text-align: center;
+    padding: 20px;
 }
 
 .close {
-    float: right;
+    margin-left: auto;
     font-size: 24px;
     cursor: pointer;
 }
@@ -89,3 +91,4 @@
 .cancel-btn:hover {
     background: #c82333;
 }
+

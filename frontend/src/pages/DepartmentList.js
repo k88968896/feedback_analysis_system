@@ -77,9 +77,9 @@ const DepartmentList = () => {
                     員工數量: dept.employees.length
                 }))}
                 actions={[
-                    {label: "查看員工",onClick: (dept) => {console.log("Navigating to department:", dept._id); navigate(`/employees/${dept._id}`);}},
-                    {label: "刪除", onClick: (dept) => {console.log("_id:", dept._id); handleDeleteDepartment(dept._id, dept.員工數量)} }
-            ]}
+                    { label: "查看員工", onClick: (dept) => { console.log("Navigating to department:", dept._id); navigate(`/employees/${dept._id}`); } },
+                    { label: "刪除", onClick: (dept) => { console.log("_id:", dept._id); handleDeleteDepartment(dept._id, dept.員工數量) } }
+                ]}
             />
 
             {showAddModal && (

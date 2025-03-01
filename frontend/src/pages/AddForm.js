@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../utils/api";
 import Layout from "../components/Layout";
-import { Container, Row, Col, Form, Button, Card, InputGroup, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Modal } from 'react-bootstrap';
 import "../styles/AddForm.css";
 
 /**
@@ -34,6 +34,15 @@ const QuestionsContainer = ({
 
     const onDragStart = (index) => {
         setDraggedIndex(index);
+        const questionBlock = document.querySelector(`.question-block[data-index='${index}']`);
+        if (questionBlock) {
+            questionBlock.classList.add('dragging');
+        }
+    };
+
+    const onDragEnd = () => {
+        const questionBlocks = document.querySelectorAll('.question-block');
+        questionBlocks.forEach(block => block.classList.remove('dragging'));
     };
 
     const onDragOver = (e) => {
@@ -48,6 +57,7 @@ const QuestionsContainer = ({
         updatedQuestions.splice(index, 0, removed);
         setQuestions(updatedQuestions);
         setDraggedIndex(null); // 重置拖曳索引
+        onDragEnd(); // 拖曳結束時移除 dragging 類
     };
 
     /** 根據題型返回對應的選項樣式類型 */
@@ -75,6 +85,7 @@ const QuestionsContainer = ({
                 <div
                     key={q.id.toString()}
                     className={`question-block ${selectedQuestionIndex === qIndex ? 'selected' : ''}`}
+                    data-index={qIndex}
                     draggable="false"
                     onClick={(e) => {
                         e.stopPropagation();
@@ -83,14 +94,12 @@ const QuestionsContainer = ({
                     onDragOver={onDragOver}
                     onDrop={() => onDrop(qIndex)}
                 >
-                    {/* 顯示題目位置 */}
-                    <div className="question-position">
-                        題目位置: {qIndex + 1} {/* 顯示題目位置，從1開始 */}
-                    </div>
+                    
                     <div
                         className="drag-handle"
                         draggable
                         onDragStart={() => onDragStart(qIndex)}
+                        onDragEnd={onDragEnd}
                         style={{ cursor: 'grab', textAlign: 'center' }}
                     >
                         &#x2022;&#x2022;&#x2022;

@@ -67,6 +67,68 @@ router.post("/", async (req, res) => {
     }
 });
 
+// 批量新增員工
+router.post('/bulk', async (req, res) => {
+    try {
+        const users = req.body; // 獲取請求中的用戶資料
+
+        // 確保 users 是一個數組
+        if (!Array.isArray(users)) {
+            return res.status(400).json({ message: "請求資料格式不正確，應為數組" });
+        }
+
+        // 檢查每個用戶的資料
+        for (const user of users) {
+            const { user_account, user_name, user_phone, password, department_id } = user;
+
+            // 確保帳號唯一
+            const existingUser = await User.findOne({ user_account });
+            if (existingUser) {
+                return res.status(400).json({ message: `帳號 ${user_account} 已存在` });
+            }
+
+            // 確保 `department_id` 是有效的 ObjectId
+            if (!mongoose.Types.ObjectId.isValid(department_id)) {
+                return res.status(400).json({ message: "無效的 department_id" });
+            }
+
+            // 密碼加密
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            // 新增員工到 `users` 集合
+            const newUser = new User({
+                user_account,
+                user_name,
+                user_phone,
+                password: hashedPassword,
+                department_id,
+            });
+
+            const savedUser = await newUser.save();
+
+            // 更新 `companies` 集合，將員工加入對應的 `department`
+            await Company.updateOne(
+                { "departments._id": department_id },
+                {
+                    $push: {
+                        "departments.$.employees": {
+                            user_id: savedUser._id,
+                            position: "一般員工"
+                        }
+                    }
+                }
+            );
+
+
+        }
+
+        res.status(201).json({ message: "員工批量新增成功" });
+    } catch (error) {
+        console.error("Error adding employees:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
+
 // 修改員工資訊
 router.put("/:employeeId", async (req, res) => {
     try {
@@ -79,7 +141,7 @@ router.put("/:employeeId", async (req, res) => {
 
         const updatedUser = await User.findByIdAndUpdate(
             employeeId,
-            { user_account, user_name, user_phone, password},
+            { user_account, user_name, user_phone, password },
             { new: true } // 返回更新後的資料
         );
 
@@ -113,10 +175,15 @@ router.delete("/:employeeId", async (req, res) => {
         await User.findByIdAndDelete(employeeId);
 
         // 從 `companies` 集合內部門的 `employees` 陣列中移除
-        await Company.updateOne(
-            { "departments.employees._id": employeeId },
-            { $pull: { "departments.$.employees": { _id: employeeId } } }
+        const result = await Company.updateOne(
+            { "departments.employees.user_id": employeeId }, // 使用 user_id 查詢
+            { $pull: { "departments.$.employees": { user_id: employeeId } } } // 使用 user_id 移除
         );
+
+        if (result.modifiedCount === 0) {
+            console.log("No employees were removed from the company.");
+            return res.status(404).json({ message: "未找到相關部門或員工" });
+        }
 
         res.json({ message: "員工已刪除" });
     } catch (error) {
@@ -124,5 +191,7 @@ router.delete("/:employeeId", async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
+
+
 
 module.exports = router;

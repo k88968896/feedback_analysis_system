@@ -500,9 +500,10 @@ select:focus {
 
 
 .add-option-btn {
-    padding: 0.3rem 0.7rem;
+    padding: 0.1rem 0.5rem;
     background-color: #f8f9fa;
     border: 1px dashed #ccc;
+    border-radius: 5px;
     color: #666;
     margin-top: 0.5rem;
     transition: all 0.2s ease;
@@ -758,9 +759,8 @@ select:focus {
 }
 
 /* 统一输入框样式 */
-.option input[type="text"],
-.dropdown-option input[type="text"] {
-    padding: 0.3rem 0.5rem;
+.option input[type="text"] {
+    padding: 0.3rem 0.2rem;
     font-size: 0.9rem;
     flex: 1;
     border: 1px solid #ccc;
@@ -771,25 +771,25 @@ select:focus {
     transition: all 0.2s ease;
 }
 
-/* 调整下拉式选单选中状态 */
-.dropdown-option.selected-answer {
-    background: #e8f5e9;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,128,0,0.1);
-}
 
 /* 新增是非題樣式 */
 .boolean-options {
   display: flex;
   gap: 2rem;
-  padding: 1rem 0;
+  padding: 0.2rem 0;
 }
 
 .boolean-options .option {
   background: none;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.6rem;
   border-radius: 8px;
   border: 1px solid #ddd;
+}
+
+.boolean-options .option.selected-answer {
+    background: #e8f5e9; /* 淺綠色背景 */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 128, 0, 0.1);
 }
 
 /* 新增圖片題樣式 */
@@ -837,4 +837,18 @@ select:focus {
     font-size: 14px; /* 調整字體大小 */
     color: #555; /* 調整顏色 */
     margin-bottom: 5px; /* 調整與其他元素的距離 */
+}
+
+.dragging {
+    opacity: 0.7;
+    border: 2px dashed #007bff;
+    background: #f8f9fa;
+    box-shadow: 0 8px 16px rgba(0, 123, 255, 0.15);
+}
+
+@media (max-width: 576px) {
+    .dragging {
+        padding: 1.25rem 0.75rem 0.75rem;
+        margin: 1.25rem 0;
+    }
 }

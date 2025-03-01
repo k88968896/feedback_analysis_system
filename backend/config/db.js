@@ -10,7 +10,7 @@ const connectDB = async () => {
             dbName: "feedback_analysis_systemDB"
         });
         isConnected = true;
-        console.log("✅ MongoDB Connected Successfully! ${conn.connection.db.databaseName}");
+        console.log("✅ MongoDB Connected Successfully!");
     } catch (error) {
         isConnected = false;
         console.error("❌ MongoDB Connection Error:", error);
