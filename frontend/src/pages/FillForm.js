@@ -43,15 +43,19 @@ const FillForm = () => {
             <h2>{form.form_title}</h2>
             <p>{form.form_description}</p>
             <form onSubmit={handleSubmit}>
-                {form.questions.map(question => (
-                    <div key={question._id}>
-                        <p>{question.question_title}</p>
-                        {question.options.map(option => (
-                            <label key={option._id}>
-                                <input type="radio" name={question._id} value={option._id}
-                                    onChange={() => handleAnswerChange(question._id, option._id)} />
-                                {option.option_content}
-                            </label>
+                {form.questions.map((question) => (
+                    <div key={question.id}>
+                        <p>{question.questionText}</p>
+                        {question.options.map((option, index) => (
+                            <div key={index}>
+                                <input
+                                    type="radio"
+                                    name={question.id}
+                                    value={option}
+                                    onChange={() => handleAnswerChange(question.id, option)}
+                                />
+                                {option}
+                            </div>
                         ))}
                     </div>
                 ))}
