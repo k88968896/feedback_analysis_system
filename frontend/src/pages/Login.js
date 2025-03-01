@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Layout from "../components/Layout";
+import "../styles/Login.css"; // 引入自定義樣式
 
 const Login = () => {
     const { login } = useAuth();
@@ -37,6 +38,7 @@ const Login = () => {
                     <input type="text" name="user_account" placeholder="帳號" onChange={handleChange} required />
                     <input type="password" name="password" placeholder="密碼" onChange={handleChange} required />
                     <button type="submit">登入</button>
+                    <button onClick={() => navigate("/register")}>註冊</button>
                 </form>
             </div>
         </Layout>

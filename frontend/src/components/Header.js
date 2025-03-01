@@ -39,7 +39,7 @@ const Header = ({ toggleSidebar }) => {
                                 </button>
                             </>
                         ) : (
-                            <span className="badge bg-secondary">未登入</span>
+                            <span onClick={() => navigate("/login")} className="badge bg-secondary">未登入</span>
                         )}
                     </Nav.Link>
                 </Nav>

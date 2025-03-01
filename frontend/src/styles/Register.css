@@ -1,0 +1,63 @@
+.register-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* 使容器填滿整個視口高度 */
+    background-color: #f5f5f5; /* 背景顏色 */
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    width: 300px; /* 設定表單寬度 */
+}
+
+.register-form input {
+    margin: 10px 0; /* 每個輸入框的上下邊距 */
+    padding: 10px; /* 內邊距 */
+    border: 1px solid #ccc; /* 邊框樣式 */
+    border-radius: 4px; /* 圓角 */
+}
+
+.register-form button {
+    padding: 10px;
+    background-color: #007bff; /* 按鈕背景顏色 */
+    color: white; /* 按鈕文字顏色 */
+    border: none; /* 無邊框 */
+    border-radius: 4px; /* 圓角 */
+    cursor: pointer; /* 鼠標懸停時顯示手形 */
+}
+
+.register-form button:hover {
+    background-color: #0056b3; /* 懸停時的背景顏色 */
+}
+
+.error {
+    color: red; /* 錯誤信息顏色 */
+}
+
+.role-selection {
+    display: grid; /* 使用網格布局 */
+    grid-template-columns: repeat(2, 1fr); /* 2列 */
+    gap: 10px; /* 按鈕之間的間距 */
+    margin: 10px 0; /* 上下邊距 */
+}
+
+.role-selection button {
+    padding: 10px;
+    background-color: #ffffff; /* 按鈕背景顏色 */
+    color: rgb(0, 0, 0); /* 按鈕文字顏色 */
+    border: 1px solid #ccc; /* 灰色邊框 */
+    border-radius: 4px; /* 圓角 */
+    cursor: pointer; /* 鼠標懸停時顯示手形 */
+}
+
+.role-selection button.active {
+    background-color: #28a745; /* 選中時的背景顏色 */
+    color: white; /* 選中時的文字顏色 */
+}
+
+.role-selection button:hover {
+    background-color: #218838; /* 懸停時的背景顏色 */
+} 

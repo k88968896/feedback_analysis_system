@@ -85,8 +85,7 @@ const DepartmentList = () => {
             {showAddModal && (
                 <AddModal
                     title="新增部門"
-                    fields={[{ label: "部門名稱", type: "text", name: "department_name", value: newDepartment }]}
-                    onChange={(e) => setNewDepartment(e.target.value)}
+                    fields={[{ label: "部門名稱", type: "text", name: "department_name", value: newDepartment, onChange: (e) => setNewDepartment(e.target.value) }]}
                     onSubmit={addDepartment}
                     onClose={() => setShowAddModal(false)}
                 />

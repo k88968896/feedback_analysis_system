@@ -10,38 +10,39 @@ main {
 .login-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    height: 100vh; /* 使容器填滿整個視口 */
-    background-color: #f8f9fa; /* 淺灰色背景 */
+    align-items: center;
+    height: 100%; /* 使容器填滿整個視口高度 */
+    background-color: #f5f5f5; /* 背景顏色 */
 }
 
 .login-form {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
     width: 300px; /* 設定表單寬度 */
 }
 
 .login-form input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
+    margin: 10px 0; /* 每個輸入框的上下邊距 */
+    padding: 10px; /* 內邊距 */
+    border: 1px solid #ccc; /* 邊框樣式 */
+    border-radius: 4px; /* 圓角 */
 }
 
 .login-form button {
-    width: 100%;
+    margin:10px 0;
     padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    background-color: #007bff; /* 按鈕背景顏色 */
+    color: white; /* 按鈕文字顏色 */
+    border: none; /* 無邊框 */
+    border-radius: 4px; /* 圓角 */
+    cursor: pointer; /* 鼠標懸停時顯示手形 */
 }
 
 .login-form button:hover {
-    background-color: #0056b3; /* 深藍色 */
+    background-color: #0056b3; /* 懸停時的背景顏色 */
+}
+
+.error {
+    color: red; /* 錯誤信息顏色 */
 }

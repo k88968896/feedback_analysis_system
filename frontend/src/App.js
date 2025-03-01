@@ -11,6 +11,7 @@ import EmployeeList from "./pages/EmployeeList";
 import FormList from "./pages/FormList";
 import AddForm from "./pages/AddForm";
 import FillForm from "./pages/FillForm";
+import Register from "./pages/Register";
 
 
 const PrivateRoute = ({ element, roles }) => {
@@ -37,6 +38,7 @@ const App = () => {
                     <Route path="/forms" element={<PrivateRoute element={<FormList />} roles={["admin", "HR", "employee"]} />} />
                     <Route path="/forms/add" element={<PrivateRoute element={<AddForm />} roles={["admin"]} />} />
                     <Route path="/forms/fill/:formId" element={<PrivateRoute element={<FillForm />} roles={["employee"]} />} />
+                    <Route path="/register" element={<Register />} />
                 </Routes>
             </Router>
         </AuthProvider>

@@ -151,10 +151,21 @@ const EmployeeList = () => {
         }
     };
 
+    const handleAddUserClick = () => {
+        setNewUser({
+            user_id: "",
+            user_account: "",
+            user_name: "",
+            user_phone: "",
+            password: "",
+        });
+        setShowAddModal(true);
+    };
+
     return (
         <Layout>
             <h2>{currentDepartmentName} - 用戶列表</h2>
-            <button onClick={() => setShowAddModal(true)}>新增用戶</button>
+            <button onClick={handleAddUserClick}>新增用戶</button>
             <input
                 type="file"
                 accept=".xlsx, .xls"
@@ -255,16 +266,16 @@ const EmployeeList = () => {
                 <AddModal
                     title="新增用戶"
                     fields={[
-                        { label: "帳號", type: "text", name: "user_account", value: newUser.user_account },
-                        { label: "姓名", type: "text", name: "user_name", value: newUser.user_name },
-                        { label: "電話", type: "text", name: "user_phone", value: newUser.user_phone },
-                        { label: "密碼", type: "password", name: "password", value: newUser.password },
+                        { label: "帳號", type: "text", name: "user_account", value: newUser.user_account, onChange: (e) => setNewUser({ ...newUser, user_account: e.target.value }) },
+                        { label: "姓名", type: "text", name: "user_name", value: newUser.user_name, onChange: (e) => setNewUser({ ...newUser, user_name: e.target.value }) },
+                        { label: "電話", type: "text", name: "user_phone", value: newUser.user_phone, onChange: (e) => setNewUser({ ...newUser, user_phone: e.target.value }) },
+                        { label: "密碼", type: "password", name: "password", value: newUser.password, onChange: (e) => setNewUser({ ...newUser, password: e.target.value }) }
                     ]}
-                    onChange={(e) => setNewUser({ ...newUser, [e.target.name]: e.target.value })}
                     onSubmit={handleAddUser}
                     onClose={() => setShowAddModal(false)}
                 />
             )}
+
 
             {/* 統一的編輯用戶彈窗 */}
             {showEditModal && userToEdit && (
