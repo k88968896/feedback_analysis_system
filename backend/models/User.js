@@ -12,9 +12,9 @@ const UserSchema = new mongoose.Schema({
         enum: ["admin", "teacher", "company_admin", "department_hr", "tester"],
         default: "tester"
     },
-    company_id: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
-    department_id: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
-    project_id: { type: mongoose.Schema.Types.ObjectId, ref: "Project", required: false },
+    company_id: { type: mongoose.Schema.Types.ObjectId, ref: "Company", default: null },
+    department_id: { type: mongoose.Schema.Types.ObjectId, ref: "Company", default: null },
+    project_id: { type: mongoose.Schema.Types.ObjectId, ref: "Project", default: null },
 });
 
 module.exports = mongoose.model("User", UserSchema);

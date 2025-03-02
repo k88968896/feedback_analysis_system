@@ -9,9 +9,9 @@ const Sidebar = ({ isOpen }) => {
     // 自定義切換按鈕
     const CustomToggle = ({ children, eventKey }) => {
         const decoratedOnClick = useAccordionButton(eventKey);
-    
+
         return (
-            <Nav.Link 
+            <Nav.Link
                 onClick={decoratedOnClick}
                 className="d-flex justify-content-between align-items-center pe-0"
             >
@@ -21,7 +21,7 @@ const Sidebar = ({ isOpen }) => {
     };
 
     return (
-        <div className={`bg-light border-end ${isOpen ? "d-block" : "d-none d-md-block"}`} style={{width: '250px', height: '100vh'}}>
+        <div className={`bg-light border-end ${isOpen ? "d-block" : "d-none d-md-block"}`} style={{ width: '250px', height: '100vh' }}>
             <Nav className="flex-column p-3">
                 <Accordion activeKey={activeKey} onSelect={(k) => setActiveKey(k)} flush>
                     {/* 首頁 */}
@@ -48,7 +48,6 @@ const Sidebar = ({ isOpen }) => {
                             </CustomToggle>
                             <Accordion.Body className="p-0">
                                 <Nav className="flex-column">
-                                    <Nav.Link as={Link} to="/companies" className="ps-4">公司列表</Nav.Link>
                                     <Nav.Link href="#" className="ps-4">部門資料</Nav.Link>
                                     <Nav.Link href="#" className="ps-4">員工管理</Nav.Link>
                                 </Nav>
@@ -96,6 +95,7 @@ const Sidebar = ({ isOpen }) => {
                             </CustomToggle>
                             <Accordion.Body className="p-0">
                                 <Nav className="flex-column">
+                                    <Nav.Link as={Link} to="/companies" className="ps-4">公司列表</Nav.Link>
                                     <Nav.Link as={Link} to="/users" className="ps-4">使用者列表</Nav.Link>
                                 </Nav>
                             </Accordion.Body>

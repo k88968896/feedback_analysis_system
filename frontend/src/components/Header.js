@@ -13,16 +13,20 @@ const Header = ({ toggleSidebar }) => {
 
         let displayName = user.user_name; // 使用者名稱
         const companyName = user.company_name || "未指定"; // 公司名稱
-        const departmentName = user.department_name || ""; // 部門名稱
+        const departmentName = user.department_name || "未指定"; // 部門名稱
 
-        if (user.role === "company_admin") {
-            displayName += ` (${companyName} - 公司負責人)`;
+        if (user.role === "admin"){
+            displayName += `（系統管理員）`;
+        } else if (user.role === "company_admin") {
+            displayName += `（${companyName} - 公司負責人）`;
         } else if (user.role === "department_hr") {
-            displayName += ` (${companyName} - 部門負責人)`;
+            displayName += `（${companyName} - 部門負責人）`;
+        } else if (user.role === "teacher") {
+            displayName += `（教師）`;
         } else if (departmentName) {
-            displayName += ` (${companyName} - ${departmentName})`;
+            displayName += `（${companyName} - ${departmentName}）`;
         } else {
-            displayName += ` (${companyName})`;
+            displayName += `（無法辨識 請聯繫系統管理員）`;
         }
 
         return displayName;

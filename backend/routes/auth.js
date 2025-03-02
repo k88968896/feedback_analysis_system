@@ -191,15 +191,22 @@ router.get("/me", verifyToken, async (req, res) => {
         if (!token) {
             return res.status(401).json({ message: "未授權" });
         }
+        
+        const companies = await Company.find();
+        const companyMap = {};
+        const departmentMap = {};
+        companies.forEach(company => {
+            companyMap[company._id.toString()] = company.company_name;
+            company.departments.forEach(department => {
+                departmentMap[department._id.toString()] = department.department_name;
+            });
+        });
 
         const decoded = jwt.verify(token, JWT_SECRET);
         const userId = decoded.id; // 從 JWT 中提取用戶ID
 
         // 使用 populate 獲取公司和部門信息
-        const user = await User.findById(userId)
-            .populate('company_id', 'company_name') // 獲取公司名稱
-            .populate('department_id', 'departments.department_name') // 獲取部門名稱
-            .select("-password"); // 不返回密碼
+        const user = await User.findById(userId).select("-password"); // 不返回密碼
 
         if (!user) {
             return res.status(404).json({ message: "用戶不存在" });
@@ -212,8 +219,8 @@ router.get("/me", verifyToken, async (req, res) => {
             user_name: user.user_name,
             user_phone: user.user_phone,
             role: user.role,
-            company_name: user.company_id ? user.company_id.company_name : "未指定", // 獲取公司名稱
-            department_name: user.department_id ? user.department_id.department_name : "未指定" // 獲取部門名稱
+            company_name: companyMap[user.company_id?.toString()] || "未指定", // 獲取公司名稱
+            department_name: departmentMap[user.department_id?.toString()] || "未指定" // 獲取部門名稱
         };
 
         res.json(userInfo); // 返回完整的用戶信息
