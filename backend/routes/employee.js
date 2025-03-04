@@ -49,8 +49,7 @@ router.post("/", async (req, res) => {
             {
                 $push: {
                     "departments.$.employees": {
-                        user_id: savedUser._id,
-                        position: "一般員工"
+                        user_id: savedUser._id
                     }
                 }
             }

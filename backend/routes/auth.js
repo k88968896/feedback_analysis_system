@@ -17,7 +17,7 @@ const getCompanyIdByCode = async (company_code) => {
 // 註冊
 router.post("/register", async (req, res) => {
     try {
-        const { company_name, user_account, user_name, user_phone, password, role, company_code, department_name } = req.body;
+        const { company_code, company_name, department_name, password, role, user_account, user_name, user_phone } = req.body;
 
         // 確保帳號唯一
         const existingUser = await User.findOne({ user_account });
@@ -53,10 +53,12 @@ router.post("/register", async (req, res) => {
 
         // 根據角色創建用戶和公司
         if (role === "company_admin") {
+
             const uniqueCompanyCode = await generateUniqueCompanyCode(); // 獲取唯一的公司代號
             const newCompany = new Company({
                 company_name,
                 company_code: uniqueCompanyCode,
+                company_admin: null,
                 documents: [{ user_account, role }]
             });
             await newCompany.save();
@@ -71,48 +73,102 @@ router.post("/register", async (req, res) => {
                 department_id: null
             });
             await newUser.save();
+
+            // 更新公司，將新用戶設置為公司負責人
+            await Company.updateOne(
+                { _id: newCompany._id },
+                { $set: { company_admin: newUser._id } }
+            );
+
         } else if (role === "department_hr") {
             const companyId = await getCompanyIdByCode(company_code); // 根據公司代號獲取公司ID
             if (!companyId) {
                 return res.status(400).json({ message: "公司代號錯誤" });
             }
 
-            // 創建新的部門
-            const newDepartment = {
-                department_name,
-                HR: null, // 初始時不設置HR
-                employees: [] // 初始時部門沒有員工
-            };
+            // 獲取公司實例
+            const company = await Company.findOne({ _id: companyId });
+            if (!company) {
+                return res.status(404).json({ message: "找不到公司" });
+            }
 
-            // 更新公司，將新部門添加到部門列表中
-            await Company.updateOne(
-                { _id: companyId },
-                { $push: { departments: newDepartment } }
-            );
+            // 檢查該部門是否存在
+            const existingDepartment = company.departments.find(d => d.department_name === department_name);
+            if (existingDepartment) {
+                // 檢查該部門是否已有負責人
+                if (existingDepartment.department_hr) {
+                    return res.status(400).json({ message: "部門負責人已存在" });
+                } else {
+                    // 如果沒有負責人，則設置新用戶為部門負責人
+                    const newUser = new User({
+                        user_account,
+                        user_name,
+                        user_phone,
+                        password: hashedPassword,
+                        role: "department_hr",
+                        company_id: companyId,
+                        department_id: existingDepartment._id // 設置部門ID
+                    });
+                    await newUser.save();
 
-            // 獲取新部門的ID
-            const updatedCompany = await Company.findById(companyId);
-            const departmentId = updatedCompany.departments[updatedCompany.departments.length - 1]._id;
+                    // 更新部門HR為新用戶
+                    await Company.updateOne(
+                        { _id: companyId, "departments._id": existingDepartment._id },
+                        { $set: { "departments.$.department_hr": newUser._id} }
+                    );
 
-            // 創建用戶並設置為部門HR
-            const newUser = new User({
-                user_account,
-                user_name,
-                user_phone,
-                password: hashedPassword,
-                role: "department_hr",
-                company_id: companyId,
-                department_id: departmentId // 設置部門ID
-            });
-            await newUser.save();
+                    //新增進employees
+                    await Company.updateOne(
+                        { _id: companyId, "departments._id": existingDepartment._id },
+                        { $push: { "departments.$.employees": {user_id:newUser._id}} }
+                    );
 
-            // 更新部門HR為新用戶
-            await Company.updateOne(
-                { _id: companyId, "departments._id": departmentId },
-                { $set: { "departments.$.department_hr": newUser._id } }
-            );
+                    return res.status(201).json({ message: "註冊成功，已設置為部門負責人" });
+                }
+            } else {
+                // 如果部門不存在，創建新部門
+                const newDepartment = {
+                    department_name,
+                    department_hr: null, // 初始時不設置HR
+                    employees: [] // 初始時部門沒有員工
+                };
 
-            
+                // 更新公司，將新部門添加到部門列表中
+                await Company.updateOne(
+                    { _id: companyId },
+                    { $push: { departments: newDepartment } }
+                );
+
+                // 獲取新部門的ID
+                const updatedCompany = await Company.findById(companyId);
+                const departmentId = updatedCompany.departments[updatedCompany.departments.length - 1]._id;
+
+                // 創建用戶並設置為部門HR
+                const newUser = new User({
+                    user_account,
+                    user_name,
+                    user_phone,
+                    password: hashedPassword,
+                    role: "department_hr",
+                    company_id: companyId,
+                    department_id: departmentId // 設置部門ID
+                });
+                await newUser.save();
+
+                // 更新部門HR為新用戶
+                await Company.updateOne(
+                    { _id: companyId, "departments._id": departmentId },
+                    { $set: { "departments.$.department_hr": newUser._id } }
+                );
+
+                //新增進employees
+                await Company.updateOne(
+                    { _id: companyId, "departments._id": existingDepartment._id },
+                    { $push: { "departments.$.employees": {user_id:newUser._id}} }
+                );
+
+                return res.status(201).json({ message: "註冊成功，已創建新部門" });
+            }
 
         } else if (role === "teacher") {
             const newUser = new User({
@@ -138,7 +194,7 @@ router.post("/register", async (req, res) => {
         res.status(201).json({ message: "註冊成功" });
     } catch (error) {
         console.error("註冊失敗:", error);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Server errorffff" });
     }
 });
 
@@ -191,7 +247,7 @@ router.get("/me", verifyToken, async (req, res) => {
         if (!token) {
             return res.status(401).json({ message: "未授權" });
         }
-        
+
         const companies = await Company.find();
         const companyMap = {};
         const departmentMap = {};

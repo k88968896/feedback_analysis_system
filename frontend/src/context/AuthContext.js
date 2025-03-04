@@ -9,11 +9,22 @@ export const AuthProvider = ({ children }) => {
 
     const fetchUser = async () => {
         try {
+            // 首先檢查本地存儲中是否有 token
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                // 如果沒有 token，直接設置 loading 為 false
+                setLoading(false);
+                return;
+            }
+
+            // 只有在有 token 的情況下才發送請求
             const res = await API.get("/auth/me");
-            setUser(res.data); // 確保這裡設置為完整的用戶信息
+            setUser(res.data);
         } catch (error) {
             console.error("Error fetching user:", error);
-            logout();
+            // 如果請求失敗，清除本地存儲中的 token
+            localStorage.removeItem('token');
         } finally {
             setLoading(false);
         }
@@ -40,7 +51,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, logout, loading, setUser }}>
             {children}
         </AuthContext.Provider>
     );

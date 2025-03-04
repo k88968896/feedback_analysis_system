@@ -6,7 +6,7 @@ const { verifyToken, authorize } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 // 取得所有公司
-router.get("/", verifyToken, async (req, res) => {
+router.get("/", verifyToken, authorize(["admin"]), async (req, res) => {
     try {
         const companies = await Company.find();
         res.json(companies);
@@ -15,9 +15,8 @@ router.get("/", verifyToken, async (req, res) => {
     }
 });
 
-// 新增公司 尚未新增權限
-//router.post("/", verifyToken, authorize(["admin"]), async (req, res) => {
-router.post("/", verifyToken, async (req, res) => {
+// 新增公司
+router.post("/", verifyToken, authorize(["admin"]), async (req, res) => {
     try {
         const { company_name } = req.body;
 
@@ -53,7 +52,7 @@ router.post("/", verifyToken, async (req, res) => {
 });
 
 // 取得公司內所有部門
-router.get("/:companyId", verifyToken, authorize(["admin", "HR"]), async (req, res) => {
+router.get("/:companyId", verifyToken, authorize(["admin", "company_admin"]), async (req, res) => {
     try {
         const { companyId } = req.params;
 
@@ -73,7 +72,7 @@ router.get("/:companyId", verifyToken, authorize(["admin", "HR"]), async (req, r
 });
 
 // 新增部門到公司
-router.post("/:companyId/departments", verifyToken, authorize(["admin", "HR"]), async (req, res) => {
+router.post("/:companyId/departments", verifyToken, authorize(["admin", "company_admin"]), async (req, res) => {
     try {
         const { companyId } = req.params;
         const { department_name } = req.body;
@@ -110,7 +109,7 @@ router.post("/:companyId/departments", verifyToken, authorize(["admin", "HR"]), 
 });
 
 // 刪除部門
-router.delete("/:companyId/departments/:departmentId", verifyToken, authorize(["admin", "HR"]), async (req, res) => {
+router.delete("/:companyId/departments/:departmentId", verifyToken, authorize(["admin", "company_admin"]), async (req, res) => {
     try {
         const { companyId, departmentId } = req.params;
 
