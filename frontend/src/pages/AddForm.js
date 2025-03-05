@@ -126,9 +126,36 @@ const QuestionsContainer = ({
                                 <option value="boolean">是非題</option>
                                 <option value="image">圖片題</option>
                                 <option value="text">簡答題</option>
+                                <option value="matching">配合題</option>
                             </select>
                         </div>
                     </div>
+                    
+                    <div className="options-container">
+                        {q.questionType === "matching" ? (
+                            <div className="matching-container">
+                                {q.options.map((opt, optIndex) => (
+                                    <div key={optIndex} className="matching-option">
+                                        <input type="text" value={opt.left} onChange={(e) => updateOption(qIndex, optIndex, e.target.value, 'left')} placeholder="輸入題目" />
+                                        <select value={opt.right} onChange={(e) => updateOption(qIndex, optIndex, e.target.value, 'right')}>
+                                            {[...Array(26)].map((_, i) => (
+                                                <option key={i} value={String.fromCharCode(65 + i)}>{String.fromCharCode(65 + i)}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : q.options.map((opt, optIndex) => (
+                            <div key={optIndex} className="option">
+                                <input type="text" value={opt.text} onChange={(e) => updateOption(qIndex, optIndex, e.target.value)} placeholder="輸入選項" />
+                                <button onClick={() => deleteOption(qIndex, optIndex)}>刪除</button>
+                            </div>
+                        ))}
+                        {selectedQuestionIndex === qIndex && (
+                            <button onClick={() => addOption(qIndex)}>+ 新增題目</button>
+                        )}
+                    </div>
+
 
                     <div className="options-container">
                         {q.questionType === 'text' ? (
@@ -568,6 +595,11 @@ const AddForm = () => {
             return [
                 { text: "是", isAnswer: false },
                 { text: "否", isAnswer: false }
+            ];
+        } else if (questionType === 'matching') {
+            return [
+                { left: "", right: "A" },
+                { left: "", right: "B" }
             ];
         }
         return [{ text: "", isAnswer: false }];
