@@ -194,7 +194,7 @@ router.post("/register", async (req, res) => {
         res.status(201).json({ message: "註冊成功" });
     } catch (error) {
         console.error("註冊失敗:", error);
-        res.status(500).json({ message: "Server errorffff" });
+        res.status(500).json({ message: "Server error" });
     }
 });
 

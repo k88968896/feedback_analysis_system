@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import Layout from "../components/Layout";
 import Table from "../components/Table";
 import AddModal from "../components/AddModal";
 import API from "../utils/api"; // 引入 api.js
+import { useAuth } from "../context/AuthContext";
 
 const DepartmentList = () => {
+    const { user } = useAuth();
     const { companyId } = useParams();
     const navigate = useNavigate();
     const [departments, setDepartments] = useState([]);
@@ -20,13 +21,29 @@ const DepartmentList = () => {
     }, []);
 
     const fetchDepartments = async () => {
+        // try {
+        //     const res = await API.get(`/companies/${companyId}`);
+        //     console.log("API Response:", res.data); // Debugging
+        //     setDepartments(res.data.departments);
+        //     setCompanyName(res.data.company_name);
+        // } catch (error) {
+        //     console.error("Error fetching departments:", error);
+        // }
         try {
-            const res = await API.get(`/companies/${companyId}`);
-            console.log("API Response:", res.data); // Debugging
-            setDepartments(res.data.departments);
-            setCompanyName(res.data.company_name);
+            if (user) {
+                let res;
+                if (user.role === "admin") {
+                    res = await API.get(`/companies/${companyId}`);
+                } else if (user.role === "company_admin") {
+                    res = await API.get(`/companies/${user.company_id}`);
+                } else {
+                    console.error("無法獲取部門列表");
+                }
+                setDepartments(res.data.departments);
+                setCompanyName(res.data.company_name);
+            }
         } catch (error) {
-            console.error("Error fetching departments:", error);
+            console.error("獲取部門列表失敗:", error);
         }
     };
 
