@@ -94,6 +94,7 @@ router.post("/register", async (req, res) => {
 
             // 檢查該部門是否存在
             const existingDepartment = company.departments.find(d => d.department_name === department_name);
+
             if (existingDepartment) {
                 // 檢查該部門是否已有負責人
                 if (existingDepartment.department_hr) {
@@ -114,13 +115,13 @@ router.post("/register", async (req, res) => {
                     // 更新部門HR為新用戶
                     await Company.updateOne(
                         { _id: companyId, "departments._id": existingDepartment._id },
-                        { $set: { "departments.$.department_hr": newUser._id} }
+                        { $set: { "departments.$.department_hr": newUser._id } }
                     );
 
                     //新增進employees
                     await Company.updateOne(
                         { _id: companyId, "departments._id": existingDepartment._id },
-                        { $push: { "departments.$.employees": {user_id:newUser._id}} }
+                        { $push: { "departments.$.employees": { user_id: newUser._id } } }
                     );
 
                     return res.status(201).json({ message: "註冊成功，已設置為部門負責人" });
@@ -163,8 +164,8 @@ router.post("/register", async (req, res) => {
 
                 //新增進employees
                 await Company.updateOne(
-                    { _id: companyId, "departments._id": existingDepartment._id },
-                    { $push: { "departments.$.employees": {user_id:newUser._id}} }
+                    { _id: companyId, "departments._id": departmentId },
+                    { $push: { "departments.$.employees": { user_id: newUser._id } } }
                 );
 
                 return res.status(201).json({ message: "註冊成功，已創建新部門" });

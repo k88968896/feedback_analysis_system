@@ -72,7 +72,7 @@ const DepartmentList = () => {
         if (!confirmDelete) return;
 
         try {
-            await API.delete(`/companies/${companyId}/departments/${departmentId}`);
+            await API.delete(`/companies/${companyId}/${departmentId}`);
             fetchDepartments();
         } catch (error) {
             console.error("刪除部門失敗:", error);
@@ -94,7 +94,7 @@ const DepartmentList = () => {
                     員工數量: dept.employees.length
                 }))}
                 actions={[
-                    { label: "查看員工", onClick: (dept) => { console.log("Navigating to department:", dept._id); navigate(`/employees/${dept._id}`); } },
+                    { label: "查看員工", onClick: (dept) => { console.log("Navigating to department:", dept._id); navigate(`/companies/${companyId}/${dept._id}/employees`); } },
                     { label: "刪除", onClick: (dept) => { console.log("_id:", dept._id); handleDeleteDepartment(dept._id, dept.員工數量) } }
                 ]}
             />

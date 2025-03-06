@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const User = require("../models/User");
 const Company = require("../models/Company");
 const { verifyToken, authorize } = require("../middleware/authMiddleware");
 
@@ -55,6 +56,11 @@ router.post("/", verifyToken, authorize(["admin"]), async (req, res) => {
 router.get("/:companyId", verifyToken, authorize(["admin", "company_admin"]), async (req, res) => {
     try {
         const { companyId } = req.params;
+        const { user } = req;
+
+        if (user.role !== "admin" && user.company_id !== companyId) {
+            return res.status(403).json({ message: "無權限訪問公司的部門" });
+        }
 
         if (!mongoose.Types.ObjectId.isValid(companyId)) {
             return res.status(400).json({ message: "無效的 companyId" });
@@ -71,11 +77,49 @@ router.get("/:companyId", verifyToken, authorize(["admin", "company_admin"]), as
     }
 });
 
+// 取得公司某部門內部所有員工
+router.get("/:companyId/:departmentId/employees", verifyToken, authorize(["admin", "company_admin", "department_hr"]), async (req, res) => {
+    try {
+        const { companyId, departmentId } = req.params;
+        const { user } = req;
+
+        if (user.role !== "admin" && user.company_id !== companyId ) {
+            return res.status(403).json({ message: "無權限訪問公司的部門" });
+        }
+
+        if (!mongoose.Types.ObjectId.isValid(companyId) || !mongoose.Types.ObjectId.isValid(departmentId)) {
+            return res.status(400).json({ message: "無效的 companyId 或 departmentId" });
+        }
+
+        const company = await Company.findOne({ _id: companyId, "departments._id": departmentId });
+        if (!company) {
+            return res.status(404).json({ message: "找不到公司或部門" });
+        }
+
+        const department = company.departments.find(d => d._id.toString() === departmentId);
+        if (!department) {
+            return res.status(404).json({ message: "部門不存在" });
+        }
+
+        // 找出所有屬於該部門的員工
+        const employees = await User.find({ department_id: departmentId });
+
+        res.json({ department_name: department.department_name, employees });
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
 // 新增部門到公司
 router.post("/:companyId/departments", verifyToken, authorize(["admin", "company_admin"]), async (req, res) => {
     try {
         const { companyId } = req.params;
         const { department_name } = req.body;
+        const { user } = req;
+
+        if (user.role !== "admin" && user.company_id !== companyId) {
+            return res.status(403).json({ message: "無權限訪問公司的部門" });
+        }
 
         if (!mongoose.Types.ObjectId.isValid(companyId)) {
             return res.status(400).json({ message: "無效的 companyId" });
@@ -109,9 +153,14 @@ router.post("/:companyId/departments", verifyToken, authorize(["admin", "company
 });
 
 // 刪除部門
-router.delete("/:companyId/departments/:departmentId", verifyToken, authorize(["admin", "company_admin"]), async (req, res) => {
+router.delete("/:companyId/:departmentId", verifyToken, authorize(["admin", "company_admin"]), async (req, res) => {
     try {
         const { companyId, departmentId } = req.params;
+        const { user } = req;
+
+        if (user.role !== "admin" && user.company_id !== companyId) {
+            return res.status(403).json({ message: "無權限訪問公司的部門" });
+        }
 
         if (!mongoose.Types.ObjectId.isValid(companyId) || !mongoose.Types.ObjectId.isValid(departmentId)) {
             return res.status(400).json({ message: "無效的 companyId 或 departmentId" });
@@ -143,5 +192,7 @@ router.delete("/:companyId/departments/:departmentId", verifyToken, authorize(["
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
+
+
 
 module.exports = router;

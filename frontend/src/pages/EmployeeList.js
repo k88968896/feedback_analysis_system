@@ -9,7 +9,7 @@ import * as XLSX from 'xlsx';
 import "../styles/EmployeeList.css";
 
 const EmployeeList = () => {
-    const { departmentId } = useParams();
+    const { companyId, departmentId } = useParams();
     const [users, setUsers] = useState([]);
     const [currentDepartmentName, setCurrentDepartmentName] = useState("");
     const [showAddModal, setShowAddModal] = useState(false);
@@ -23,7 +23,6 @@ const EmployeeList = () => {
         password: "",
     });
     const fileInputRef = useRef(null);
-    const [importedData, setImportedData] = useState([]);
     const [showImportModal, setShowImportModal] = useState(false);
     const [editableData, setEditableData] = useState([]);
 
@@ -33,7 +32,7 @@ const EmployeeList = () => {
 
     const fetchUsers = async () => {
         try {
-            const res = await API.get(`/departments/${departmentId}/employees`);
+            const res = await API.get(`/companies/${companyId}/${departmentId}/employees`);
             setUsers(res.data.employees);
             setCurrentDepartmentName(res.data.department_name);
         } catch (error) {

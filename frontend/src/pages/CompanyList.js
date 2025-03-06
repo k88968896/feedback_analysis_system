@@ -45,7 +45,7 @@ const CompanyList = () => {
                 columns={["公司名稱", "公司代號"]} // 新增公司代號列
                 data={companies.map(c => ({ _id: c._id, 公司名稱: c.company_name, 公司代號: c.company_code }))} // 包含公司代號
                 actions={[
-                    { label: "查看部門", onClick: (c) => navigate(`/departments/${c._id}`) } // 使用 _id 進行跳轉
+                    { label: "查看部門", onClick: (c) => navigate(`/companies/${c._id}`) } // 使用 _id 進行跳轉
                 ]}
             />
 

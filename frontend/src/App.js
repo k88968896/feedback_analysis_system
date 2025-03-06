@@ -39,12 +39,12 @@ const App = () => {
                             element={<CompanyList />}
                             roles={["admin"]}
                         />} />
-                    <Route path="/departments/:companyId" element={
+                    <Route path="/companies/:companyId" element={
                         <PrivateRoute
                             element={<DepartmentList />}
                             roles={["admin", "company_admin"]}
                         />} />
-                    <Route path="/employees/:departmentId" element={
+                    <Route path="/companies/:companyId/:departmentId/employees" element={
                         <PrivateRoute
                             element={<EmployeeList />}
                             roles={["admin", "company_admin", "department_hr"]}
