@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import Layout from "../components/Layout";
 import Table from "../components/Table";
 import API from "../utils/api"; // 引入 api.js

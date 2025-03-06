@@ -57,8 +57,8 @@ router.get("/:companyId", verifyToken, authorize(["admin", "company_admin"]), as
     try {
         const { companyId } = req.params;
         const { user } = req;
-
-        if (user.role !== "admin" && user.company_id !== companyId) {
+        console.log(user.company_id, companyId);
+        if (user.role !== "admin" && user.company_id.toString() !== companyId) {
             return res.status(403).json({ message: "無權限訪問公司的部門" });
         }
 
@@ -83,7 +83,7 @@ router.get("/:companyId/:departmentId/employees", verifyToken, authorize(["admin
         const { companyId, departmentId } = req.params;
         const { user } = req;
 
-        if (user.role !== "admin" && user.company_id !== companyId ) {
+        if (user.company_id.toString() !== companyId) {
             return res.status(403).json({ message: "無權限訪問公司的部門" });
         }
 
@@ -117,7 +117,7 @@ router.post("/:companyId/departments", verifyToken, authorize(["admin", "company
         const { department_name } = req.body;
         const { user } = req;
 
-        if (user.role !== "admin" && user.company_id !== companyId) {
+        if (user.company_id.toString() !== companyId) {
             return res.status(403).json({ message: "無權限訪問公司的部門" });
         }
 
@@ -158,7 +158,7 @@ router.delete("/:companyId/:departmentId", verifyToken, authorize(["admin", "com
         const { companyId, departmentId } = req.params;
         const { user } = req;
 
-        if (user.role !== "admin" && user.company_id !== companyId) {
+        if (user.company_id.toString() !== companyId) {
             return res.status(403).json({ message: "無權限訪問公司的部門" });
         }
 

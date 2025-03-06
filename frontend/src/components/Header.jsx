@@ -1,10 +1,10 @@
 import { Navbar, Container, Nav } from "react-bootstrap";
 import { BiMenu } from "react-icons/bi";
-import { useAuth } from "../context/AuthContext";
+import useStore from "../stores/useStore"; // 引入 Zustand store
 import { useNavigate } from "react-router-dom";
 
 const Header = ({ toggleSidebar }) => {
-    const { user, logout } = useAuth();
+    const { user, logout, hasRole } = useStore(); // 使用 Zustand store
     const navigate = useNavigate();
 
     // 構建顯示的用戶名稱
@@ -15,13 +15,13 @@ const Header = ({ toggleSidebar }) => {
         const companyName = user.company_name || "未指定"; // 公司名稱
         const departmentName = user.department_name || "未指定"; // 部門名稱
 
-        if (user.role === "admin"){
+        if (hasRole("admin")){
             displayName += `（系統管理員）`;
-        } else if (user.role === "company_admin") {
+        } else if (hasRole("company_admin")) {
             displayName += `（${companyName} - 公司負責人）`;
-        } else if (user.role === "department_hr") {
+        } else if (hasRole("department_hr")) {
             displayName += `（${companyName} - 部門負責人）`;
-        } else if (user.role === "teacher") {
+        } else if (hasRole("teacher")) {
             displayName += `（教師）`;
         } else if (departmentName) {
             displayName += `（${companyName} - ${departmentName}）`;
@@ -56,6 +56,9 @@ const Header = ({ toggleSidebar }) => {
                                 >
                                     {getUserDisplayName()}
                                 </span>
+                                {hasRole("admin") && (
+                                    <span className="badge bg-warning ms-2">管理員</span>
+                                )}
                                 <button 
                                     className="btn btn-link text-light ms-2" 
                                     onClick={logout}

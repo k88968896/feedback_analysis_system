@@ -48,8 +48,9 @@ const Sidebar = ({ isOpen }) => {
                             </CustomToggle>
                             <Accordion.Body className="p-0">
                                 <Nav className="flex-column">
-                                    <Nav.Link href="#" className="ps-4">部門管理</Nav.Link>
-                                    <Nav.Link href="#" className="ps-4">員工管理</Nav.Link>
+                                    {user && user.role === "company_admin" && (
+                                        <Nav.Link as={Link} to={`/companies/${user.company_id}`} className="ps-4">部門管理</Nav.Link>
+                                    )}
                                 </Nav>
                             </Accordion.Body>
                         </Accordion.Item>

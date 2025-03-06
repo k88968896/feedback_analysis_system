@@ -1,11 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import Layout from "../components/Layout";
 import "../styles/Login.css"; // 引入自定義樣式
+import useStore from "../stores/useStore"; // 確保正確導入
 
 const Login = () => {
-    const { login } = useAuth();
+    const { login } = useStore(); // 使用 Zustand store
     const navigate = useNavigate();
     const [formData, setFormData] = useState({ company_code: "", user_account: "", password: "" });
     const [error, setError] = useState("");
@@ -17,7 +17,6 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // 確保傳遞所有必要的資料
             await login(formData.company_code, formData.user_account, formData.password);
             navigate("/");
         } catch (err) {
@@ -31,7 +30,6 @@ const Login = () => {
                 <h2>登入</h2>
                 {error && <p className="error">{error}</p>}
                 <form onSubmit={handleSubmit} className="login-form">
-
                     {formData.user_account !== "admin" &&
                         <input type="text" name="company_code" placeholder="公司代號" onChange={handleChange} required />
                     }

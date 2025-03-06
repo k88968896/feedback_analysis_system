@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { Container, Row, Col } from "react-bootstrap";
-
+import useStore from "../stores/useStore"; // 引入 Zustand store
 const Layout = ({ children }) => {
-    const { user } = useAuth();
+    const { user } = useStore();
     const [isSidebarOpen, setIsSidebarOpen] = useState(user ? true : false);
 
     const toggleSidebar = () => {

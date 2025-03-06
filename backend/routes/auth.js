@@ -276,7 +276,9 @@ router.get("/me", verifyToken, async (req, res) => {
             user_name: user.user_name,
             user_phone: user.user_phone,
             role: user.role,
+            company_id: user.company_id,
             company_name: companyMap[user.company_id?.toString()] || "未指定", // 獲取公司名稱
+            department_id: user.department_id,
             department_name: departmentMap[user.department_id?.toString()] || "未指定" // 獲取部門名稱
         };
 

@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import API from "../utils/api";
 import Layout from "../components/Layout";
 import Table from "../components/Table";
-import { useAuth } from "../context/AuthContext";
+import useStore from "../stores/useStore"; // 引入 Zustand store
 
 const FormList = () => {
     const [forms, setForms] = useState([]);
-    const { user } = useAuth();
+    const { user } = useStore();
 
     useEffect(() => {
         fetchForms();
